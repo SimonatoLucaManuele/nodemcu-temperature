@@ -4,11 +4,11 @@ local module = {}
 
 pin = 1
 module.pin = pin
-status, temp, humi = dht.read11(pin)
 
 local function read_status()
 
 	-- salviamo lo stato nel modulo che poi esporteremo
+	status, temp, humi = dht.read11(pin)
 
 	module.status = status
 
@@ -17,9 +17,6 @@ local function read_status()
         print("DHT Temperature:"..temp..";\t".."Humidity:"..humi)
 
 		-- salviamo nel modulo nuovi valori
-	    module.temp = temp
-	    module.humi = humi
-
 	    if mclient.status == 'ok' then
 		    mclient.send_ping('humidity', ' ' .. humi .. ' ')
 		    mclient.send_ping('temperature',  ' ' .. temp .. ' ')
@@ -32,19 +29,9 @@ local function read_status()
     end
 end
 
-function module.read_values()
-	
-	print("DHT Temperature:"..temp..";".."Humidity:"..humi)
-
-	-- salviamo nel modulo nuovi valori
-    module.temp = temp
-    module.humi = humi
-
-end
-
 local function start_sensor()
 	
-	tmr.alarm(0, 1000, 1, function() read_status() end)
+	tmr.alarm(0, 3000, 1, function() read_status() end)
 
 end
 
